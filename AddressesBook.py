@@ -3,7 +3,16 @@ from datetime import datetime
 
 
 class Field:
-    pass
+    def __init__(self):
+        self._value = None
+
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: str):
+        self._value = value
 
 
 class Name(Field):
@@ -12,17 +21,15 @@ class Name(Field):
 
 
 class Phone(Field):
-    def __init__(self):
-        self.value = None
 
     @property
-    def number(self):
-        return self.value
+    def value(self):
+        return self._value
 
-    @number.setter
-    def number(self, value: str):
+    @value.setter
+    def value(self, value: str):
         if value.isnumeric():
-            self.value = value
+            self._value = value
         else:
             print('Number must contain only digits')
 
@@ -41,7 +48,18 @@ class Birthday:
             self.value = datetime.strptime(value, '%d %B %Y')
         except ValueError:
             print('Invalid input form. Need for example: 10 January 2020')
+class Birthday(Field):
 
+    @property
+    def value(self):
+        return self._value
+
+    @value.setter
+    def value(self, value: str):
+        try:
+            self._value = datetime.strptime(value, '%d %B %Y')
+        except ValueError:
+            print('Invalid input form. Need for example: 10 January 2020')
 
 
 
@@ -54,12 +72,12 @@ class Record:
         self.phones = []
 
     def add_birthday(self, value):
-        self.birthday(value)
+        self.birthday.value = value
 
     def days_to_birthday(self):
-        if self.birthday.birthday:
-            birthday_in_this_year = datetime(year=datetime.now().year, month=self.birthday.birthday.month, day=self.birthday.birthday.day)
-            birthday_in_next_year = datetime(year=datetime.now().year + 1, month=self.birthday.birthday.month, day=self.birthday.birthday.day)
+        if self.birthday.value:
+            birthday_in_this_year = datetime(year=datetime.now().year, month=self.birthday.value.month, day=self.birthday.value.day)
+            birthday_in_next_year = datetime(year=datetime.now().year + 1, month=self.birthday.value.month, day=self.birthday.value.day)
             if birthday_in_this_year < datetime.now():
                 days_to_birthday = birthday_in_next_year - datetime.now()
                 return days_to_birthday.days
@@ -68,13 +86,13 @@ class Record:
                 return days_to_birthday.days
 
     def add_phone(self, phone):
-        self.phone.number = phone
-        self.phones.append(self.phone.number)
+        self.phone.value = phone
+        self.phones.append(self.phone.value)
         print(f"You added {phone} to {self.name.value}")
 
     def delete_phone(self, phone):
         for p in self.phones:
-            if p.number == phone:
+            if p.value == phone:
                 self.phones.remove(p)
                 print(f"You remove {phone} from {self.name.value}")
                 return True
@@ -87,7 +105,7 @@ class Record:
     def get_contacts(self):
         result = []
         for phone in self.phones:
-            result.append(phone.number)
+            result.append(phone.value)
         return result
 
 
