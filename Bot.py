@@ -76,6 +76,11 @@ def days_to_birthday(data):
         return f'{data[0]} not exist in contacts'
 
 
+def step_for_look(data):
+    if data[0].isnumeric():
+        dict_contacts.step = int(data[0])
+
+
 OPERATIONS = {
     'hello': hello,
     'add': add,
@@ -87,7 +92,8 @@ OPERATIONS = {
     'exit': end_program,
     'wrong comand': wrong_comand,
     'set birthday': add_birthday,
-    'days to birthday': days_to_birthday
+    'days to birthday': days_to_birthday,
+    'step for look': step_for_look
 }
 
 

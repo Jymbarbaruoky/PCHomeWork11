@@ -2,9 +2,11 @@ from collections import UserDict
 from datetime import datetime
 
 
+
 class Field:
-    def __init__(self):
+    def __init__(self, value):
         self._value = None
+        self.value = value
 
     @property
     def value(self):
@@ -16,17 +18,12 @@ class Field:
 
 
 class Name(Field):
-    def __init__(self, value):
-        self.value = value
+    pass
 
 
 class Phone(Field):
 
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value: str):
         if value.isnumeric():
             self._value = value
@@ -34,27 +31,9 @@ class Phone(Field):
             print('Number must contain only digits')
 
 
-class Birthday:
-    def __init__(self, value=None):
-        self.value = value
-
-    @property
-    def birthday(self):
-        return self.value
-
-    @birthday.setter
-    def birthday(self, value: str):
-        try:
-            self.value = datetime.strptime(value, '%d %B %Y')
-        except ValueError:
-            print('Invalid input form. Need for example: 10 January 2020')
 class Birthday(Field):
 
-    @property
-    def value(self):
-        return self._value
-
-    @value.setter
+    @Field.value.setter
     def value(self, value: str):
         try:
             self._value = datetime.strptime(value, '%d %B %Y')
@@ -62,17 +41,14 @@ class Birthday(Field):
             print('Invalid input form. Need for example: 10 January 2020')
 
 
-
-
 class Record:
     def __init__(self, name):
-        self.birthday = Birthday()
+        self.birthday = None
         self.name = Name(name)
-        self.phone = Phone()
         self.phones = []
 
     def add_birthday(self, value):
-        self.birthday.value = value
+        self.birthday = Birthday(value)
 
     def days_to_birthday(self):
         if self.birthday.value:
@@ -80,14 +56,13 @@ class Record:
             birthday_in_next_year = datetime(year=datetime.now().year + 1, month=self.birthday.value.month, day=self.birthday.value.day)
             if birthday_in_this_year < datetime.now():
                 days_to_birthday = birthday_in_next_year - datetime.now()
-                return days_to_birthday.days
+                return f'{days_to_birthday.days} days until the next birthday'
             else:
                 days_to_birthday = birthday_in_this_year - datetime.now()
-                return days_to_birthday.days
+                return f'{days_to_birthday.days} days until the next birthday'
 
     def add_phone(self, phone):
-        self.phone.value = phone
-        self.phones.append(self.phone.value)
+        self.phones.append(Phone(phone))
         print(f"You added {phone} to {self.name.value}")
 
     def delete_phone(self, phone):
@@ -131,12 +106,8 @@ class AddressBook(UserDict):
             self.boundary += self.step
             raise StopIteration
 
-    def add_record(self, Record):
-        self.data[Record.name.value] = Record
-
-
-
-
+    def add_record(self, record):
+        self.data[record.name.value] = record
 
 
         
